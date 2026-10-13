@@ -1,0 +1,1385 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plataforma de Liderazgo y Gestión del Tiempo | Bloques 2 y 4 • Reto 1 FUNIN - UOC</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            uoc: {
+              corporate: '#000078', // Azul UOC oficial
+              light: '#000099',
+              dark: '#000055',
+              cyan: '#73EDFF',      // Cian de acento UOC
+              cyanDark: '#00B8D9',
+              soft: '#F4F6F9',
+              border: '#D8E2EC'
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body {
+      background-color: #f8fafc;
+      color: #0f172a;
+      -webkit-font-smoothing: antialiased;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #f1f5f9;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94a3b8;
+    }
+    input[type=range] {
+      accent-color: #000078;
+    }
+    .card-shadow {
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 120, 0.04), 0 8px 10px -6px rgba(15, 23, 42, 0.04);
+    }
+    .hero-gradient {
+      background: linear-gradient(135deg, #000078 0%, #000055 100%);
+    }
+    @media print {
+      .no-print { display: none !important; }
+      .print-visible { display: block !important; }
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col font-sans selection:bg-uoc-cyan selection:text-uoc-corporate">
+
+  <!-- ================= CABECERA INSTITUCIONAL UOC ================= -->
+  <header class="bg-white border-b border-slate-200 sticky top-0 z-50 shadow-sm backdrop-blur-md bg-white/95">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex justify-between items-center h-16">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-uoc-corporate flex items-center justify-center text-white font-extrabold text-base tracking-wider shadow-md">
+            UOC
+          </div>
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-semibold px-2 py-0.5 rounded-full bg-blue-50 text-uoc-corporate border border-blue-200 uppercase tracking-wider">Reto 1 • Herramienta Web Interactiva</span>
+              <span class="text-xs text-slate-400 font-medium hidden sm:inline">Bloque 2 (Goleman) & Bloque 4 (Eisenhower)</span>
+            </div>
+            <h1 class="text-base sm:text-lg font-bold text-slate-900 leading-tight">Laboratorio de Habilidades Directivas • Caso FUNIN</h1>
+          </div>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="btnHelpModal" class="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-medium text-slate-600 hover:text-uoc-corporate hover:bg-slate-100 rounded-lg transition-colors">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+            <span>Guía Docente</span>
+          </button>
+          <button id="btnQuickDemo" class="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 text-xs sm:text-sm font-semibold text-uoc-corporate bg-blue-50 hover:bg-blue-100 rounded-lg transition-all border border-blue-200">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/></svg>
+            <span>Cargar Ejemplo de Referencia</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- ================= BARRA DE NAVEGACIÓN ENFOCADA A LOS BLOQUES 2 Y 4 ================= -->
+  <div class="bg-slate-100 border-b border-slate-200 sticky top-16 z-40">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <nav class="flex space-x-2 sm:space-x-6 overflow-x-auto py-2 custom-scrollbar text-xs sm:text-sm font-medium" id="mainTabs">
+        
+        <button onclick="switchTab('tab-inici')" class="nav-tab active-tab text-uoc-corporate border-b-2 border-uoc-corporate pb-2 px-1 flex items-center gap-2 whitespace-nowrap transition cursor-pointer" data-tab="tab-inici">
+          <span class="tab-badge w-5 h-5 rounded-full bg-uoc-corporate text-white flex items-center justify-center text-xs font-bold">🏠</span>
+          Inicio & Guía de Uso
+        </button>
+
+        <button onclick="switchTab('tab-bloc2')" class="nav-tab text-slate-500 hover:text-slate-800 border-b-2 border-transparent pb-2 px-1 flex items-center gap-2 whitespace-nowrap transition cursor-pointer" data-tab="tab-bloc2">
+          <span class="tab-badge w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-xs font-bold">2</span>
+          Bloque 2: Liderazgo & Clima - Goleman (1,5 pts)
+        </button>
+
+        <button onclick="switchTab('tab-bloc4')" class="nav-tab text-slate-500 hover:text-slate-800 border-b-2 border-transparent pb-2 px-1 flex items-center gap-2 whitespace-nowrap transition cursor-pointer" data-tab="tab-bloc4">
+          <span class="tab-badge w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-xs font-bold">4</span>
+          Bloque 4: Matriz de Eisenhower Web (1,5 pts)
+        </button>
+
+        <button onclick="switchTab('tab-captures')" class="nav-tab text-slate-500 hover:text-slate-800 border-b-2 border-transparent pb-2 px-1 flex items-center gap-2 whitespace-nowrap transition cursor-pointer" data-tab="tab-captures">
+          <span class="tab-badge w-5 h-5 rounded-full bg-slate-300 text-slate-700 flex items-center justify-center text-xs font-bold">📷</span>
+          Dossier de Capturas & Síntesis (Memoria)
+        </button>
+
+      </nav>
+    </div>
+  </div>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+    <!-- ================= PÁGINA INICIAL / GUÍA DE USO WEB ================= -->
+    <section id="tab-inici" class="tab-content block space-y-6">
+      
+      <!-- Banner Hero Caso FUNIN -->
+      <div class="hero-gradient rounded-3xl p-6 sm:p-8 text-white relative overflow-hidden shadow-xl border-b-4 border-uoc-cyan">
+        <div class="relative z-10 max-w-3xl">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-white/10 text-uoc-cyan text-xs font-semibold rounded-full border border-uoc-cyan/30 uppercase tracking-wider mb-3">
+            Herramienta Digital de Apoyo Docente • Reto 1
+          </span>
+          <h2 class="text-2xl sm:text-3xl font-extrabold leading-tight">Plataforma Interactiva para los Bloques 2 y 4 (Caso FUNIN)</h2>
+          <p class="text-slate-200 text-xs sm:text-sm mt-3 leading-relaxed">
+            Has sido promocionado/a a responsable del Departamento de Personas de la <strong>Fundación FUNIN</strong> tras 10 años como técnico/a de RRHH, pasando a liderar a seis personas que hasta ayer eran compañeros tuyos.
+          </p>
+          <div class="mt-4 p-3.5 bg-white/10 rounded-2xl border border-white/20 text-xs text-slate-100 space-y-1">
+            <p><strong>📌 Cómo se utiliza esta plataforma web en el Reto 1:</strong></p>
+            <p class="text-slate-200 leading-relaxed">
+              Esta herramienta está programada exclusivamente para dar soporte computacional y gráfico a las dos partes interactivas de la actividad:
+            </p>
+            <ul class="list-disc list-inside space-y-0.5 text-uoc-cyan font-medium pt-1">
+              <li><strong>Bloque 2 (Liderazgo & Clima):</strong> Simula tu test de Goleman, genera el Radar de Repertorio, mide el impacto en los 6 impulsores del clima y obtén las capturas oficiales 📷.</li>
+              <li><strong>Bloque 4 (Gestión del Tiempo):</strong> Clasifica las 10 tareas reales del equipo FUNIN en la Matriz de Eisenhower, evalúa el porcentaje de energía en el Cuadrante II y genera la captura de la cuadrícula 📷.</li>
+            </ul>
+          </div>
+          <div class="mt-5 flex flex-wrap gap-3">
+            <button onclick="switchTab('tab-bloc2')" class="px-5 py-2.5 bg-uoc-cyan hover:bg-white text-uoc-corporate text-xs font-bold rounded-xl transition shadow-md flex items-center gap-2">
+              <span>Abrir Simulador de Liderazgo (Bloque 2)</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="switchTab('tab-bloc4')" class="px-5 py-2.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-xl transition border border-white/20 flex items-center gap-2">
+              <span>Abrir Matriz de Eisenhower (Bloque 4)</span>
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+            </button>
+            <button onclick="switchTab('tab-captures')" class="px-4 py-2.5 bg-white/10 hover:bg-white/20 text-white text-xs font-semibold rounded-xl transition border border-white/20">
+              Dossier para la Memoria 📷
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Menú Interactivo Directo -->
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+        
+        <!-- Tarjeta Bloque 2 -->
+        <div onclick="switchTab('tab-bloc2')" class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow hover:border-uoc-corporate hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-50 text-uoc-corporate flex items-center justify-center font-bold text-sm border border-blue-200">2</span>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Valor: 1,5 puntos</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-uoc-corporate transition">Bloque 2: Diagnóstico de Liderazgo y Clima Organizacional</h3>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Basado en el artículo clásico de Daniel Goleman (<em>Liderazgo que obtiene resultados</em>, HBR 2005). Introduce las puntuaciones de tu test de Moodle, analiza tu perfil frente al líder resonante, mide el impacto en los 6 impulsores de Litwin & Stringer y aplica la contingencia al equipo FUNIN.
+            </p>
+            <div class="mt-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600 space-y-1">
+              <span class="font-bold text-slate-700 block">Acciones requeridas en la memoria:</span>
+              <span>• 📷 <strong>Captura 1:</strong> Gráfico Radar de repertorio de estilos.</span><br>
+              <span>• 📷 <strong>Captura 2:</strong> Gráfico de los 6 impulsores del clima organizacional.</span><br>
+              <span>• Respuestas a los apartados 2.1 (perfil), 2.2 (subgrupos FUNIN), 2.3 (feedback 360°) y 2.4 (clima).</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-uoc-corporate font-bold">
+            <span>Iniciar diagnóstico de Goleman</span>
+            <span>→</span>
+          </div>
+        </div>
+
+        <!-- Tarjeta Bloque 4 -->
+        <div onclick="switchTab('tab-bloc4')" class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow hover:border-uoc-corporate hover:shadow-lg transition cursor-pointer flex flex-col justify-between group">
+          <div>
+            <div class="flex items-center justify-between mb-3">
+              <span class="w-8 h-8 rounded-xl bg-blue-50 text-uoc-corporate flex items-center justify-center font-bold text-sm border border-blue-200">4</span>
+              <span class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-200">Valor: 1,5 puntos</span>
+            </div>
+            <h3 class="text-base font-bold text-slate-900 group-hover:text-uoc-corporate transition">Bloque 4: Gestión del Tiempo y Priorización con la Matriz de Eisenhower Web</h3>
+            <p class="text-xs text-slate-500 mt-2 leading-relaxed">
+              Basado en el Capítulo 2 de Whetten & Cameron (<em>Manejo del estrés personal</em>). Clasifica las 10 tareas reales del caso FUNIN entre Urgente e Importante, evita la trampa de apagar fuegos y desplaza tu energía hacia el Cuadrante II (Liderazgo Estratégico / Prevención).
+            </p>
+            <div class="mt-3 bg-slate-50 p-2.5 rounded-xl border border-slate-100 text-[11px] text-slate-600 space-y-1">
+              <span class="font-bold text-slate-700 block">Acciones requeridas en la memoria:</span>
+              <span>• 📷 <strong>Captura 3:</strong> Cuadrícula 2x2 con las 10 tareas situadas y porcentajes.</span><br>
+              <span>• Respuestas a los apartados 4.1 (clasificación personal) y 4.2 (análisis de coste y renuncias).</span>
+            </div>
+          </div>
+          <div class="mt-4 pt-3 border-t border-slate-100 flex items-center justify-between text-xs text-uoc-corporate font-bold">
+            <span>Iniciar Matriz de Eisenhower</span>
+            <span>→</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Recordatorio de los Bloques que se realizan fuera de la web -->
+      <div class="p-4 rounded-2xl bg-slate-50 border border-slate-200 text-xs text-slate-600 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+        <div>
+          <span class="font-bold text-slate-800 block text-xs">ℹ️ Recordatorio del resto de bloques del Reto 1:</span>
+          <span>El <strong>Bloque 1</strong> (Autoconocimiento directivo) y el <strong>Bloque 3</strong> (Gestión del estrés y cuidado colectivo) se redactan directamente en la memoria escrita de 4 páginas. El <strong>Bloque 5</strong> (Vídeo de 2 minutos) se graba y se sube al espacio específico de vídeo del aula Moodle.</span>
+        </div>
+        <button onclick="switchTab('tab-captures')" class="px-3.5 py-1.5 bg-white text-uoc-corporate border border-slate-300 rounded-lg font-bold hover:bg-slate-100 transition whitespace-nowrap">
+          Ver Dossier de Capturas
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ================= BLOQUE 2: LIDERAZGO Y CLIMA (DANIEL GOLEMAN) ================= -->
+    <section id="tab-bloc2" class="tab-content hidden space-y-6">
+      
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
+        <div class="sm:flex sm:items-center sm:justify-between border-b border-slate-100 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-uoc-corporate text-xs font-bold border border-blue-200 uppercase tracking-wider">
+                BLOQUE 2 • Valor 1,5 sobre 10 puntos
+              </span>
+              <span class="text-xs text-slate-400 font-medium hidden sm:inline">Daniel Goleman (HBR, 2005)</span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 mt-1">Diagnóstico del Repertorio de Liderazgo e Impacto en el Clima</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5">
+              Introduce las puntuaciones de tu test de Moodle con los deslizadores para simular tu radar, medir el impacto en los 6 impulsores y generar las capturas para tu memoria.
+            </p>
+          </div>
+          <div class="mt-3 sm:mt-0 flex gap-2">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 bg-amber-50 text-amber-800 text-xs font-semibold rounded-full border border-amber-200">
+              Escala de 0 a 100%
+            </span>
+          </div>
+        </div>
+
+        <!-- 6 Sliders de Liderazgo de Goleman -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 mt-6">
+          
+          <div class="p-4 rounded-xl border border-slate-200 hover:border-red-300 bg-slate-50/50 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold uppercase text-rose-600 bg-rose-50 px-2.5 py-0.5 rounded border border-rose-100">Coercitivo</span>
+                <span id="val-coercitivo" class="text-base font-bold text-slate-800">42%</span>
+              </div>
+              <p class="text-[11px] text-slate-500 italic mb-2">«Haz lo que te digo» • Conformidad inmediata</p>
+            </div>
+            <input type="range" id="input-coercitivo" min="0" max="100" value="42" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 hover:border-blue-300 bg-slate-50/50 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold uppercase text-uoc-corporate bg-blue-50 px-2.5 py-0.5 rounded border border-blue-100">Orientativo / Visionario</span>
+                <span id="val-orientativo" class="text-base font-bold text-slate-800">85%</span>
+              </div>
+              <p class="text-[11px] text-slate-500 italic mb-2">«Ven conmigo» • Visión compartida (+.54 clima)</p>
+            </div>
+            <input type="range" id="input-orientativo" min="0" max="100" value="85" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 hover:border-emerald-300 bg-slate-50/50 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold uppercase text-emerald-600 bg-emerald-50 px-2.5 py-0.5 rounded border border-emerald-100">Afiliativo</span>
+                <span id="val-afiliativo" class="text-base font-bold text-slate-800">78%</span>
+              </div>
+              <p class="text-[11px] text-slate-500 italic mb-2">«Las personas son lo primero» • Armonía (+.46 clima)</p>
+            </div>
+            <input type="range" id="input-afiliativo" min="0" max="100" value="78" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 hover:border-purple-300 bg-slate-50/50 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold uppercase text-purple-600 bg-purple-50 px-2.5 py-0.5 rounded border border-purple-100">Democrático</span>
+                <span id="val-democratico" class="text-base font-bold text-slate-800">72%</span>
+              </div>
+              <p class="text-[11px] text-slate-500 italic mb-2">«¿Qué piensas tú?» • Consenso participativo (+.43 clima)</p>
+            </div>
+            <input type="range" id="input-democratico" min="0" max="100" value="72" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 hover:border-amber-300 bg-slate-50/50 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold uppercase text-amber-600 bg-amber-50 px-2.5 py-0.5 rounded border border-amber-100">Ejemplar / Marcapasos</span>
+                <span id="val-ejemplar" class="text-base font-bold text-slate-800">65%</span>
+              </div>
+              <p class="text-[11px] text-slate-500 italic mb-2">«Haz como yo, ahora» • Altos estándares técnicos (-.25 clima)</p>
+            </div>
+            <input type="range" id="input-ejemplar" min="0" max="100" value="65" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
+
+          <div class="p-4 rounded-xl border border-slate-200 hover:border-teal-300 bg-slate-50/50 transition-all flex flex-col justify-between">
+            <div>
+              <div class="flex justify-between items-center mb-1.5">
+                <span class="text-xs font-bold uppercase text-teal-600 bg-teal-50 px-2.5 py-0.5 rounded border border-teal-100">Formativo / Coach</span>
+                <span id="val-formativo" class="text-base font-bold text-slate-800">80%</span>
+              </div>
+              <p class="text-[11px] text-slate-500 italic mb-2">«Intenta esto» • Desarrollo futuro (+.42 clima)</p>
+            </div>
+            <input type="range" id="input-formativo" min="0" max="100" value="80" class="w-full h-2 bg-slate-200 rounded-lg cursor-pointer">
+          </div>
+
+        </div>
+      </div>
+
+      <!-- Radar y 6 Impulsores del Clima (Capturas Oficiales 1 y 2) -->
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- Radar (Captura 1 para la PEC) -->
+        <div class="lg:col-span-6 bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col justify-between" id="boxCaptureRadar">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3">
+              <div>
+                <span class="text-[10px] font-bold text-uoc-corporate uppercase">📷 Captura 1 para la memoria</span>
+                <h3 class="text-sm font-bold text-slate-900">Repertorio de Liderazgo (Bolsa de Palos)</h3>
+              </div>
+              <span id="badgeDominancia" class="px-2.5 py-0.5 rounded-full text-xs font-semibold bg-blue-100 text-uoc-corporate">
+                Orientativo Dominante
+              </span>
+            </div>
+            <div class="relative min-h-[300px] flex items-center justify-center">
+              <canvas id="radarChart"></canvas>
+            </div>
+          </div>
+          <div class="mt-3 pt-3 border-t border-slate-100 grid grid-cols-2 gap-2 text-center text-xs">
+            <div class="p-2 rounded-lg bg-emerald-50 text-emerald-800">
+              <span class="block text-[10px] uppercase font-bold">Estilos Resonantes (+)</span>
+              <span id="kpi-resonantes" class="text-base font-extrabold">78.8%</span>
+            </div>
+            <div class="p-2 rounded-lg bg-amber-50 text-amber-800">
+              <span class="block text-[10px] uppercase font-bold">Estilos de Riesgo (-)</span>
+              <span id="kpi-disonantes" class="text-base font-extrabold">53.5%</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Impulsores del Clima (Captura 2 para la PEC) -->
+        <div class="lg:col-span-6 bg-white p-5 rounded-2xl border border-slate-200 card-shadow flex flex-col justify-between" id="boxCaptureClima">
+          <div>
+            <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-3">
+              <div>
+                <span class="text-[10px] font-bold text-uoc-corporate uppercase">📷 Captura 2 para la memoria</span>
+                <h3 class="text-sm font-bold text-slate-900">Impacto en los 6 Impulsores del Clima</h3>
+              </div>
+              <span class="text-[11px] text-slate-500 font-medium">Litwin & Stringer</span>
+            </div>
+            <div class="relative min-h-[200px] w-full mb-3">
+              <canvas id="climaBarChart"></canvas>
+            </div>
+            <div class="space-y-1.5 text-xs" id="climaDriversList">
+              <!-- Renderizado por JS -->
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Respuestas Académicas Guiadas del Bloque 2 (2.1 a 2.4) -->
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow space-y-5">
+        <div class="border-b border-slate-100 pb-3">
+          <h3 class="text-base font-bold text-slate-900">Pautas de Argumentación Académica (Bloque 2 de la Memoria)</h3>
+          <p class="text-xs text-slate-500">Puedes esbozar aquí tus reflexiones para transferirlas directamente al documento final de 4 páginas:</p>
+        </div>
+
+        <!-- 2.1 Análisis del perfil -->
+        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+          <label class="block font-bold text-slate-800 mb-1">
+            2.1. Análisis del Perfil y Estilo Predominante (Daniel Goleman):
+          </label>
+          <p class="text-[11px] text-slate-500 mb-2">
+            Comenta los resultados del test. ¿Cuál es tu estilo predominante y cómo encaja con la definición de líder que «utiliza la mayoría de estilos como los palos de una bolsa de golf»?
+          </p>
+          <textarea id="resp2_1" class="w-full p-2.5 bg-white rounded-lg border border-slate-200 focus:ring-1 focus:ring-uoc-corporate text-xs" rows="2" placeholder="Ej: Mi estilo predominante es el Orientativo (85%), complementado por el Afiliativo (78%) y el Formativo (80%), configurando un patrón resonante que favorece la claridad y el compromiso..."></textarea>
+        </div>
+
+        <!-- 2.2 Diagnóstico Contingencial de los 3 Subgrupos de FUNIN -->
+        <div>
+          <label class="block font-bold text-slate-800 text-xs mb-1">
+            2.2. Diagnóstico del Equipo FUNIN por Subgrupos:
+          </label>
+          <p class="text-[11px] text-slate-500 mb-3">Justifica la combinación de estilos idóneos para cada uno de los tres perfiles de tu equipo de personas:</p>
+
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+              <span class="px-2 py-0.5 rounded bg-rose-100 text-rose-800 font-bold text-[10px] uppercase">Fatiha y Pedro</span>
+              <h4 class="font-bold text-slate-800 mt-1 mb-1">Sobrecarga e Irritabilidad</h4>
+              <p class="text-[11px] text-slate-500 mb-2">Múltiples proyectos simultáneos. Evitar el estilo <strong>Ejemplar</strong> (aumentaría la presión crónica).</p>
+              <div class="p-1.5 rounded bg-blue-50 border border-blue-200 text-uoc-corporate font-semibold text-[11px] mb-2">
+                Recomendados: Orientativo (visión/plazos) + Afiliativo (aliviar estrés)
+              </div>
+              <textarea id="resp2_2A" class="w-full text-[11px] p-2 rounded border border-slate-200 bg-white" rows="2" placeholder="Tu estrategia concreta..."></textarea>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+              <span class="px-2 py-0.5 rounded bg-amber-100 text-amber-800 font-bold text-[10px] uppercase">Laura, Sofie y Juan</span>
+              <h4 class="font-bold text-slate-800 mt-1 mb-1">Discapacidad Física y Sobrejornada</h4>
+              <p class="text-[11px] text-slate-500 mb-2">Locales no adaptados en casa de clientes. Evitar el estilo <strong>Coercitivo</strong>.</p>
+              <div class="p-1.5 rounded bg-emerald-50 border border-emerald-200 text-emerald-800 font-semibold text-[11px] mb-2">
+                Recomendados: Afiliativo (cuidar la salud) + Democrático (acordar adaptaciones)
+              </div>
+              <textarea id="resp2_2B" class="w-full text-[11px] p-2 rounded border border-slate-200 bg-white" rows="2" placeholder="Tu estrategia concreta..."></textarea>
+            </div>
+
+            <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+              <span class="px-2 py-0.5 rounded bg-purple-100 text-purple-800 font-bold text-[10px] uppercase">Julia</span>
+              <h4 class="font-bold text-slate-800 mt-1 mb-1">Coordinadora de Inserción</h4>
+              <p class="text-[11px] text-slate-500 mb-2">Gran orientación a personas pero infravalora su capacidad directiva formal.</p>
+              <div class="p-1.5 rounded bg-teal-50 border border-teal-200 text-teal-800 font-semibold text-[11px] mb-2">
+                Recomendados: Formativo / Coach (empoderar) + Afiliativo (reconocimiento)
+              </div>
+              <textarea id="resp2_2C" class="w-full text-[11px] p-2 rounded border border-slate-200 bg-white" rows="2" placeholder="Tu estrategia concreta..."></textarea>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 2.3 y 2.4 Feedback 360 y Clima -->
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+            <label class="block font-bold text-slate-800 mb-1">2.3. Feedback 360° de Colaboradores o Confianza:</label>
+            <textarea id="resp2_3" class="w-full p-2 bg-white rounded border border-slate-200 text-xs" rows="2" placeholder="Resume qué te comentan las personas de confianza sobre cómo te perciben como líder y qué discrepancias o puntos ciegos has detectado..."></textarea>
+          </div>
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+            <label class="block font-bold text-slate-800 mb-1">2.4. Impacto en los 6 Impulsores del Clima:</label>
+            <textarea id="resp2_4" class="w-full p-2 bg-white rounded border border-slate-200 text-xs" rows="2" placeholder="Argumenta la relación entre tu perfil y las puntuaciones positivas/negativas en claridad, compromiso, flexibilidad, recompensas, responsabilidad y estándares..."></textarea>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="pt-4 flex justify-between items-center">
+        <button onclick="switchTab('tab-inici')" class="text-xs text-slate-500 hover:text-slate-800 font-medium">← Volver al Inicio</button>
+        <button onclick="switchTab('tab-bloc4')" class="inline-flex items-center gap-2 px-6 py-2.5 bg-uoc-corporate hover:bg-uoc-light text-white font-semibold text-xs rounded-xl transition shadow-md">
+          <span>Pasar al Bloque 4: Matriz de Eisenhower Web</span>
+          <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- ================= BLOQUE 4: GESTIÓN DEL TIEMPO (MATRIZ DE EISENHOWER WEB) ================= -->
+    <section id="tab-bloc4" class="tab-content hidden space-y-6">
+      
+      <!-- Aviso de modo captura limpia -->
+      <div id="printCaptureNotice" class="hidden bg-emerald-50 border-2 border-emerald-500 p-4 rounded-xl text-xs text-emerald-900 flex justify-between items-center print-visible">
+        <div>
+          <span class="font-bold text-sm block">📷 Vista Limpia Preparada para Captura de Pantalla (Bloque 4 de la Memoria)</span>
+          <span>Utiliza el atajo Impr Pant / Shift+Cmd+4 para incorporar esta cuadrícula oficial a la memoria Word/PDF.</span>
+        </div>
+        <button id="btnExitCleanView" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg font-semibold transition">
+          Restablecer modo interactivo
+        </button>
+      </div>
+
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
+        
+        <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-4 border-b border-slate-100 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-uoc-corporate text-xs font-bold border border-blue-200 uppercase tracking-wider">
+                BLOQUE 4 • Valor 1,5 sobre 10 puntos
+              </span>
+              <span class="text-xs text-slate-400 font-medium hidden sm:inline">Whetten & Cameron • Capítulo 2</span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 mt-1">Matriz de Eisenhower Web: Priorización Directiva en el Caso FUNIN</h2>
+            <p class="text-xs sm:text-sm text-slate-500 mt-0.5 max-w-3xl">
+              Diferencia lo <strong>urgente</strong> (presión temporal inmediata) de lo <strong>importante</strong> (resultados estratégicos a largo plazo). Desplaza tu energía hacia el <strong>Cuadrante II (Liderazgo Estratégico / Prevención)</strong>.
+            </p>
+          </div>
+          <div class="flex flex-wrap items-center gap-2" id="eisenhowerControlsTop">
+            <button id="btnResetEisenhower" class="px-3 py-2 text-xs font-medium text-slate-600 bg-slate-100 hover:bg-slate-200 rounded-xl transition">
+              Reiniciar
+            </button>
+            <button id="btnSolveEisenhower" class="px-3 py-2 text-xs font-semibold text-uoc-corporate bg-blue-50 hover:bg-blue-100 border border-blue-200 rounded-xl transition">
+              Solución Pedagógica Recomendada
+            </button>
+            <button id="btnCleanView" class="px-4 py-2 text-xs font-bold text-white bg-uoc-corporate hover:bg-uoc-light rounded-xl transition shadow flex items-center gap-1.5">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 9a2 2 0 012-2h.93a2 2 0 001.664-.89l.812-1.22A2 2 0 0110.07 4h3.86a2 2 0 011.664.89l.812 1.22A2 2 0 0018.07 7H19a2 2 0 012 2v9a2 2 0 01-2 2H5a2 2 0 01-2-2V9z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 13a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+              <span>Generar vista para el informe 📷</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Cabecera de alumno en modo captura limpia -->
+        <div id="cleanViewHeader" class="hidden mt-4 p-4 rounded-xl bg-slate-50 border border-slate-200 grid grid-cols-1 sm:grid-cols-3 gap-3 text-xs">
+          <div>
+            <span class="text-slate-400 block font-medium">Estudiante / Responsable:</span>
+            <input type="text" id="inputStudentName" placeholder="Introduce tu nombre..." class="w-full bg-white px-2 py-1 rounded border border-slate-200 font-semibold text-slate-800 focus:outline-none focus:ring-1 focus:ring-uoc-corporate">
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Asignatura:</span>
+            <span class="font-bold text-slate-800">Habilidades directivas, liderazgo y formación de portavoces</span>
+          </div>
+          <div>
+            <span class="text-slate-400 block font-medium">Entorno de aplicación:</span>
+            <span class="font-bold text-uoc-corporate">Departamento de Personas • Fundación FUNIN</span>
+          </div>
+        </div>
+
+        <!-- Panel de diagnóstico de la distribución del tiempo -->
+        <div class="mt-5 p-4 rounded-xl bg-slate-50 border border-slate-200">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+            <span class="text-xs font-bold text-slate-700 uppercase tracking-wider">Distribución de Energía Directiva</span>
+            <span id="diagnosticSummaryBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200 text-slate-700">
+              0 de 10 tareas clasificadas
+            </span>
+          </div>
+
+          <!-- Barra de porcentajes -->
+          <div class="w-full h-3 rounded-full bg-slate-200 overflow-hidden flex shadow-inner">
+            <div id="barQ1" class="h-full bg-rose-500 transition-all duration-300" style="width: 0%" title="Q1: Crisis"></div>
+            <div id="barQ2" class="h-full bg-emerald-500 transition-all duration-300" style="width: 0%" title="Q2: Líder / Planificar"></div>
+            <div id="barQ3" class="h-full bg-amber-500 transition-all duration-300" style="width: 0%" title="Q3: Delegar"></div>
+            <div id="barQ4" class="h-full bg-slate-400 transition-all duration-300" style="width: 0%" title="Q4: Eliminar"></div>
+          </div>
+
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-center text-xs mt-3">
+            <div class="p-2 rounded-lg bg-white border border-rose-100">
+              <span class="text-[10px] text-rose-600 uppercase font-bold block">Q1 • Crisis (Hacer Ahora)</span>
+              <span id="pctQ1" class="font-extrabold text-sm text-slate-800">0%</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white border border-emerald-200 shadow-sm">
+              <span class="text-[10px] text-emerald-700 uppercase font-bold block">Q2 • Líder Estratégico</span>
+              <span id="pctQ2" class="font-extrabold text-sm text-emerald-600">0%</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white border border-amber-100">
+              <span class="text-[10px] text-amber-700 uppercase font-bold block">Q3 • Delegar</span>
+              <span id="pctQ3" class="font-extrabold text-sm text-slate-800">0%</span>
+            </div>
+            <div class="p-2 rounded-lg bg-white border border-slate-200">
+              <span class="text-[10px] text-slate-500 uppercase font-bold block">Q4 • Eliminar / Filtrar</span>
+              <span id="pctQ4" class="font-extrabold text-sm text-slate-800">0%</span>
+            </div>
+          </div>
+
+          <div id="pedagogicalFeedback" class="mt-3 p-3 rounded-lg text-xs leading-relaxed border transition-all duration-300 bg-blue-50/70 border-blue-200 text-slate-700">
+            Arrastra o asigna las 10 tareas del caso FUNIN a los cuadrantes correspondientes para evaluar la gestión de tu tiempo.
+          </div>
+        </div>
+
+        <!-- BANCO DE TAREAS PENDIENTES DE CLASIFICAR -->
+        <div id="taskBankContainer" class="mt-6 p-4 rounded-xl border-2 border-dashed border-slate-300 bg-slate-50/50">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-3">
+            <div>
+              <h3 class="text-xs font-bold text-slate-800 uppercase tracking-wider flex items-center gap-1.5">
+                <span>📋</span> Banco de Tareas del Caso FUNIN (Pendientes de Clasificar)
+              </h3>
+              <p class="text-[11px] text-slate-500">Puedes arrastrar las tarjetas directamente a cualquier cuadrante o utilizar los selectores rápidos:</p>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <input type="text" id="inputCustomTask" placeholder="Añadir tarea propia..." class="text-xs px-2.5 py-1.5 bg-white rounded-lg border border-slate-200 focus:outline-none focus:ring-1 focus:ring-uoc-corporate w-48">
+              <button id="btnAddTask" class="px-2.5 py-1.5 bg-slate-800 hover:bg-black text-white text-xs font-semibold rounded-lg transition">
+                + Añadir
+              </button>
+            </div>
+          </div>
+
+          <div id="taskBank" class="grid grid-cols-1 md:grid-cols-2 gap-2.5 min-h-[60px]" ondragover="allowDrop(event)" ondrop="drop(event, 'bank')">
+            <!-- Tareas generadas por JS -->
+          </div>
+        </div>
+
+        <!-- CUADRÍCULA 2X2 DE EISENHOWER -->
+        <div class="mt-6">
+          <div class="grid grid-cols-1 lg:grid-cols-2 gap-4" id="eisenhowerGrid">
+            
+            <!-- Q1 -->
+            <div class="rounded-2xl border-2 border-rose-200 bg-rose-50/30 p-4 flex flex-col justify-between" id="quadrant-q1" ondragover="allowDrop(event)" ondrop="drop(event, 'q1')">
+              <div>
+                <div class="flex items-center justify-between border-b border-rose-100 pb-2 mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-rose-600 text-white flex items-center justify-center font-black text-xs">I</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-rose-950 uppercase tracking-wide">Importante & Urgente</h4>
+                      <span class="text-[11px] font-semibold text-rose-700">Crisis • Problemas Inmediatos • «Hacer Ahora»</span>
+                    </div>
+                  </div>
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-rose-100 text-rose-800" id="badgeCountQ1">0</span>
+                </div>
+                <div class="task-dropzone space-y-2 min-h-[120px]" id="zone-q1"></div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-rose-100 text-[10px] text-rose-800 font-medium">
+                Acción: Resolver rápidamente para evitar el colapso inmediato.
+              </div>
+            </div>
+
+            <!-- Q2 -->
+            <div class="rounded-2xl border-2 border-emerald-300 bg-emerald-50/40 p-4 flex flex-col justify-between shadow-sm relative" id="quadrant-q2" ondragover="allowDrop(event)" ondrop="drop(event, 'q2')">
+              <div class="absolute -top-3 right-4 bg-emerald-600 text-white text-[10px] font-extrabold uppercase px-2.5 py-0.5 rounded-full shadow-sm">
+                ★ Foco Recomendado del Líder
+              </div>
+              <div>
+                <div class="flex items-center justify-between border-b border-emerald-200 pb-2 mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-emerald-600 text-white flex items-center justify-center font-black text-xs">II</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-emerald-950 uppercase tracking-wide">Importante & NO Urgente</h4>
+                      <span class="text-[11px] font-semibold text-emerald-800">Liderazgo Estratégico • Planificación • Prevención</span>
+                    </div>
+                  </div>
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800" id="badgeCountQ2">0</span>
+                </div>
+                <div class="task-dropzone space-y-2 min-h-[120px]" id="zone-q2"></div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-emerald-200 text-[10px] text-emerald-800 font-medium">
+                Acción: Invertir el máximo tiempo para reducir permanentemente las crisis del Q1.
+              </div>
+            </div>
+
+            <!-- Q3 -->
+            <div class="rounded-2xl border-2 border-amber-200 bg-amber-50/30 p-4 flex flex-col justify-between" id="quadrant-q3" ondragover="allowDrop(event)" ondrop="drop(event, 'q3')">
+              <div>
+                <div class="flex items-center justify-between border-b border-amber-100 pb-2 mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-amber-500 text-white flex items-center justify-center font-black text-xs">III</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-amber-950 uppercase tracking-wide">NO Importante & Urgente</h4>
+                      <span class="text-[11px] font-semibold text-amber-800">Interrupciones • Presión Externa • «Delegar»</span>
+                    </div>
+                  </div>
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-amber-100 text-amber-800" id="badgeCountQ3">0</span>
+                </div>
+                <div class="task-dropzone space-y-2 min-h-[120px]" id="zone-q3"></div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-amber-100 text-[10px] text-amber-800 font-medium">
+                Acción: Delegar o establecer filtros claros de atención.
+              </div>
+            </div>
+
+            <!-- Q4 -->
+            <div class="rounded-2xl border-2 border-slate-200 bg-slate-50/50 p-4 flex flex-col justify-between" id="quadrant-q4" ondragover="allowDrop(event)" ondrop="drop(event, 'q4')">
+              <div>
+                <div class="flex items-center justify-between border-b border-slate-200 pb-2 mb-3">
+                  <div class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-lg bg-slate-500 text-white flex items-center justify-center font-black text-xs">IV</span>
+                    <div>
+                      <h4 class="text-xs font-bold text-slate-900 uppercase tracking-wide">NO Importante & NO Urgente</h4>
+                      <span class="text-[11px] font-semibold text-slate-600">Tareas Triviales • Burocracia • «Eliminar»</span>
+                    </div>
+                  </div>
+                  <span class="text-xs font-bold px-2 py-0.5 rounded-full bg-slate-200 text-slate-700" id="badgeCountQ4">0</span>
+                </div>
+                <div class="task-dropzone space-y-2 min-h-[120px]" id="zone-q4"></div>
+              </div>
+              <div class="mt-3 pt-2 border-t border-slate-200 text-[10px] text-slate-600 font-medium">
+                Acción: Eliminar o simplificar para no malgastar energía.
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- 4.1 y 4.2 Reflexiones Guiadas del Bloque 4 -->
+        <div class="mt-6 space-y-4">
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+            <h4 class="font-bold text-slate-800 uppercase tracking-wider mb-1">
+              4.1. Análisis de la Distribución Personal del Tiempo (Whetten & Cameron):
+            </h4>
+            <p class="text-slate-500 mb-2">
+              ¿Cómo refleja tu clasificación inicial el tiempo dedicado a apagar fuegos (Q1 y Q3) en comparación con la planificación estratégica (Q2)?
+            </p>
+            <textarea id="resp4_1" class="w-full p-2.5 bg-white rounded-lg border border-slate-200 focus:ring-1 focus:ring-uoc-corporate text-xs" rows="2" placeholder="Ej: Inicialmente, una gran parte de la atención se encontraba dispersa en el Q1 atendiendo quejas de clientes y urgencias técnicas..."></textarea>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs">
+            <h4 class="font-bold text-slate-800 uppercase tracking-wider mb-1">
+              4.2. Análisis Comparativo de Coste y Renuncias:
+            </h4>
+            <p class="text-slate-500 mb-2">
+              ¿Qué decisiones has tomado para desplazar tareas hacia el Cuadrante II (Planificación/Liderazgo) y qué coste o renuncia implica cada decisión para el equipo FUNIN?
+            </p>
+            <textarea id="resp4_2" class="w-full p-2.5 bg-white rounded-lg border border-slate-200 focus:ring-1 focus:ring-uoc-corporate text-xs" rows="2" placeholder="Ej: Renuncio a resolver de manera inmediata y reactiva las quejas de los clientes (coste: gestionar su posible impaciencia a corto plazo) a cambio de invertir tiempo en el Q2 para diseñar los protocolos de accesibilidad que evitarán la sobrejornada de Laura, Sofie y Juan..."></textarea>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+          <button onclick="switchTab('tab-bloc2')" class="text-xs text-slate-500 hover:text-slate-800 font-medium">← Volver al Bloque 2 (Goleman)</button>
+          <button onclick="switchTab('tab-captures')" class="inline-flex items-center gap-2 px-6 py-2.5 bg-uoc-corporate hover:bg-uoc-light text-white font-semibold text-xs rounded-xl transition shadow-md">
+            <span>Pasar al Dossier de Capturas para la Memoria</span>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3"/></svg>
+          </button>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ================= DOSSIER DE CAPTURAS & SÍNTESIS (MEMORIA ESCRITA) ================= -->
+    <section id="tab-captures" class="tab-content hidden space-y-6">
+      <div class="bg-white p-6 rounded-2xl border border-slate-200 card-shadow">
+        
+        <div class="sm:flex sm:items-center sm:justify-between border-b border-slate-100 pb-5">
+          <div>
+            <div class="flex items-center gap-2">
+              <span class="px-2.5 py-0.5 rounded-full bg-blue-50 text-uoc-corporate text-xs font-bold border border-blue-200 uppercase tracking-wider">
+                MEMORIA ESCRITA • Pautas de Entrega (4 Páginas)
+              </span>
+              <span class="text-xs text-slate-400 font-medium hidden sm:inline">Bloques 2 y 4 de la PEC</span>
+            </div>
+            <h2 class="text-xl font-bold text-slate-900 mt-1">Dossier de Capturas y Síntesis Académica (Bloques 2 y 4)</h2>
+            <p class="text-xs text-slate-500 mt-0.5">
+              Comprueba las evidencias visuales obligatorias obtenidas en la web para añadirlas a tu memoria Word/PDF y copia el borrador estructurado con citas APA 7ª edición.
+            </p>
+          </div>
+          <div class="mt-4 sm:mt-0 flex gap-2">
+            <button id="btnCopyReport" class="inline-flex items-center gap-1.5 px-4 py-2 bg-uoc-corporate hover:bg-uoc-light text-white text-xs font-semibold rounded-xl transition shadow">
+              <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 5H6a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2v-1M8 5a2 2 0 002 2h2a2 2 0 002-2M8 5a2 2 0 012-2h2a2 2 0 012 2m0 0h2a2 2 0 012 2v3m2 4H10m0 0l3-3m-3 3l3 3"/></svg>
+              <span>Copiar Síntesis Bloques 2 y 4</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Instrucciones oficiales para las capturas -->
+        <div class="mt-5 p-4 rounded-xl bg-blue-50 border border-blue-200 text-xs text-uoc-corporate flex items-start gap-3">
+          <span class="text-lg">📷</span>
+          <div class="leading-relaxed">
+            <strong class="font-bold block">Checklist de Capturas Obligatorias a adjuntar en la memoria:</strong>
+            <ul class="list-disc list-inside mt-1 space-y-0.5 text-slate-700">
+              <li><strong>Captura 1 (Bloque 2):</strong> Gráfico Radar con tu repertorio de estilos de liderazgo en comparación con el líder resonante.</li>
+              <li><strong>Captura 2 (Bloque 2):</strong> Gráfico de barras con el impacto en los 6 impulsores del clima (Litwin & Stringer).</li>
+              <li><strong>Captura 3 (Bloque 4):</strong> Cuadrícula 2x2 de la Matriz de Eisenhower con las 10 tareas clasificadas y la barra de diagnóstico.</li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Previsualización de los contenidos generados -->
+        <div class="mt-6 space-y-5">
+          <h3 class="text-sm font-bold text-slate-900">Previsualización del texto estructurado para tu memoria:</h3>
+          
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 block text-xs">BLOQUE 2: LIDERAZGO Y CLIMA - DANIEL GOLEMAN (1,5 PUNTOS)</span>
+              <button onclick="switchTab('tab-bloc2')" class="text-uoc-corporate hover:underline text-[11px] font-semibold">Editar datos en el Bloque 2 ✎</button>
+            </div>
+            <div id="txtReportBloc2" class="bg-white p-3 rounded-lg border border-slate-100 space-y-1"></div>
+          </div>
+
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-700 space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="font-bold text-slate-900 block text-xs">BLOQUE 4: GESTIÓN DEL TIEMPO Y MATRIZ DE EISENHOWER (1,5 PUNTOS)</span>
+              <button onclick="switchTab('tab-bloc4')" class="text-uoc-corporate hover:underline text-[11px] font-semibold">Editar datos en el Bloque 4 ✎</button>
+            </div>
+            <div id="txtReportBloc4" class="bg-white p-3 rounded-lg border border-slate-100 space-y-1"></div>
+          </div>
+        </div>
+
+        <div class="mt-6 pt-4 border-t border-slate-100 flex justify-between items-center">
+          <button onclick="switchTab('tab-bloc4')" class="text-xs text-slate-500 hover:text-slate-800 font-medium">← Volver al Bloque 4 (Eisenhower)</button>
+          <button onclick="switchTab('tab-inici')" class="text-xs text-uoc-corporate hover:underline font-semibold">Volver al Inicio 🏠</button>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- Modal Guía Pedagógica -->
+  <div id="helpModal" class="fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-50 flex items-center justify-center hidden p-4">
+    <div class="bg-white rounded-2xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 max-h-[90vh] overflow-y-auto custom-scrollbar">
+      <div class="flex justify-between items-center border-b border-slate-100 pb-3 mb-4">
+        <h3 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+          <span>🎓</span> Guía de la Herramienta Web • Reto 1 FUNIN
+        </h3>
+        <button id="btnCloseModal" class="text-slate-400 hover:text-slate-600 text-lg font-bold p-1">&times;</button>
+      </div>
+      <div class="text-xs text-slate-600 space-y-3 leading-relaxed">
+        <p><strong>Funcionalidad exclusiva de la plataforma web:</strong></p>
+        <ul class="list-disc list-inside space-y-1.5 pl-1 font-medium text-slate-700">
+          <li><strong>Bloque 2 (1,5 pts):</strong> Diagnóstico de tu repertorio de liderazgo a partir del test de Moodle y cálculo empírico del impacto en los 6 impulsores del clima organizacional (Daniel Goleman, HBR 2005).</li>
+          <li><strong>Bloque 4 (1,5 pts):</strong> Cuadrícula 2x2 interactiva de la Matriz de Eisenhower para clasificar las tareas del caso FUNIN y diagnosticar el porcentaje de tiempo dedicado al Cuadrante II (Whetten & Cameron, 2016).</li>
+        </ul>
+        <div class="p-3 bg-blue-50 rounded-xl text-uoc-corporate border border-blue-200 mt-2 font-medium">
+          <strong>Entrega oficial en Moodle:</strong> Los contenidos de esta web generan las capturas y argumentaciones necesarias para los Bloques 2 y 4 de la memoria escrita de máximo 4 páginas (Word y PDF). Recuerda que los Bloques 1 y 3 se elaboran por escrito y el Bloque 5 corresponde al vídeo de 2 minutos.
+        </div>
+      </div>
+      <div class="mt-5 text-right">
+        <button id="btnCloseModalBtn" class="px-5 py-2 bg-uoc-corporate text-white rounded-xl text-xs font-semibold hover:bg-uoc-light transition">Entendido</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notificación -->
+  <div id="toast" class="fixed bottom-6 right-6 bg-slate-900 text-white text-xs px-4 py-3 rounded-xl shadow-xl transform translate-y-20 opacity-0 transition-all duration-300 flex items-center gap-2 z-50">
+    <svg class="w-4 h-4 text-uoc-cyan" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>
+    <span id="toastMsg">Contenido copiado con éxito</span>
+  </div>
+
+  <!-- ================= LÓGICA JAVASCRIPT DE LA APLICACIÓN ================= -->
+  <script>
+    // Estado global de los 6 estilos de liderazgo de Goleman
+    const state = {
+      coercitivo: 42,
+      orientativo: 85,
+      afiliativo: 78,
+      democratico: 72,
+      ejemplar: 65,
+      formativo: 80
+    };
+
+    // Matriz empírica de correlación Goleman / Hay McBer (HBR 2005)
+    const golemanMatrix = {
+      coercitivo:   { flex: -0.28, resp: -0.37, est: 0.02,  rec: -0.18, cla: -0.11, com: -0.13, general: -0.26 },
+      orientativo:  { flex: 0.32,  resp: 0.21,  est: 0.38,  rec: 0.54,  cla: 0.44,  com: 0.35,  general: 0.54 },
+      afiliativo:   { flex: 0.27,  resp: 0.16,  est: -0.31, rec: 0.48,  cla: 0.37,  com: 0.34,  general: 0.46 },
+      democratico:  { flex: 0.28,  resp: 0.23,  est: 0.22,  rec: 0.42,  cla: 0.35,  com: 0.26,  general: 0.43 },
+      ejemplar:     { flex: -0.07, resp: 0.04,  est: -0.27, rec: -0.29, cla: -0.28, com: -0.20, general: -0.25 },
+      formativo:    { flex: 0.17,  resp: 0.08,  est: 0.39,  rec: 0.43,  cla: 0.38,  com: 0.27,  general: 0.42 }
+    };
+
+    // Las 10 tareas precargadas exactas del caso FUNIN (Bloque 4)
+    const defaultEisenhowerTasks = [
+      { id: 1, text: "Atender los bloqueos y urgencias de última hora en los proyectos simultáneos de Fatiha y Pedro.", ideal: "q1", current: "bank" },
+      { id: 2, text: "Gestionar las quejas directas de clientes sobre la calidad del servicio provocadas por la falta de adaptación a sus locales (afecta a Laura, Sofie y Juan).", ideal: "q1", current: "bank" },
+      { id: 3, text: "Diseñar un plan de redistribución de cargas de trabajo y dimensionamiento de proyectos con Fatiha y Pedro.", ideal: "q2", current: "bank" },
+      { id: 4, text: "Mantener sesiones periódicas de desarrollo y empoderamiento individual con Julia.", ideal: "q2", current: "bank" },
+      { id: 5, text: "Negociar con los clientes protocolos de accesibilidad y condiciones de trabajo para evitar la sobrejornada de Laura, Sofie y Juan.", ideal: "q2", current: "bank" },
+      { id: 6, text: "Planificar la visión estratégica y los objetivos del Departamento de Personas para la reunión de equipo.", ideal: "q2", current: "bank" },
+      { id: 7, text: "Resolver consultas administrativas de rutina y peticiones de información básica de los clientes.", ideal: "q3", current: "bank" },
+      { id: 8, text: "Responder inmediatamente a las interrupciones diarias sobre tareas operativas menores de Recursos Humanos.", ideal: "q3", current: "bank" },
+      { id: 9, text: "Revisar memorias y archivos de proyectos antiguos que no tienen impacto en la gestión actual.", ideal: "q4", current: "bank" },
+      { id: 10, text: "Asistir a reuniones informativas no vinculantes o rellenar informes duplicados.", ideal: "q4", current: "bank" }
+    ];
+
+    let eisenhowerTasks = JSON.parse(JSON.stringify(defaultEisenhowerTasks));
+    let radarChart = null;
+    let climaBarChart = null;
+
+    // Función de navegación por pestañas
+    function switchTab(tabId) {
+      const tabButtons = document.querySelectorAll('.nav-tab');
+      const tabContents = document.querySelectorAll('.tab-content');
+
+      tabButtons.forEach(btn => {
+        const btnTarget = btn.getAttribute('data-tab');
+        const badge = btn.querySelector('.tab-badge');
+        if (btnTarget === tabId) {
+          btn.classList.add('active-tab', 'text-uoc-corporate', 'border-uoc-corporate');
+          btn.classList.remove('text-slate-500', 'border-transparent');
+          if (badge) {
+            badge.classList.remove('bg-slate-300', 'text-slate-700');
+            badge.classList.add('bg-uoc-corporate', 'text-white');
+          }
+        } else {
+          btn.classList.remove('active-tab', 'text-uoc-corporate', 'border-uoc-corporate');
+          btn.classList.add('text-slate-500', 'border-transparent');
+          if (badge) {
+            badge.classList.remove('bg-uoc-corporate', 'text-white');
+            badge.classList.add('bg-slate-300', 'text-slate-700');
+          }
+        }
+      });
+
+      tabContents.forEach(c => {
+        if (c.id === tabId) {
+          c.classList.remove('hidden');
+          c.classList.add('block');
+        } else {
+          c.classList.remove('block');
+          c.classList.add('hidden');
+        }
+      });
+
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (tabId === 'tab-bloc2') {
+        setTimeout(() => {
+          renderRadarChart();
+          renderClimaChart();
+        }, 80);
+      } else if (tabId === 'tab-captures') {
+        updateReportOutputs();
+      }
+    }
+    window.switchTab = switchTab;
+
+    function setupNavigationListeners() {
+      const tabs = document.querySelectorAll('.nav-tab');
+      tabs.forEach(tab => {
+        tab.addEventListener('click', (e) => {
+          e.preventDefault();
+          const target = tab.getAttribute('data-tab');
+          if (target) switchTab(target);
+        });
+      });
+    }
+
+    // Toast
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      const toastMsg = document.getElementById('toastMsg');
+      toastMsg.textContent = msg;
+      toast.classList.remove('translate-y-20', 'opacity-0');
+      setTimeout(() => {
+        toast.classList.add('translate-y-20', 'opacity-0');
+      }, 3000);
+    }
+
+    // Deslizadores del Bloque 2 (Goleman)
+    function setupInputs() {
+      const keys = ['coercitivo', 'orientativo', 'afiliativo', 'democratico', 'ejemplar', 'formativo'];
+      keys.forEach(k => {
+        const inp = document.getElementById(`input-${k}`);
+        const valEl = document.getElementById(`val-${k}`);
+        if (!inp) return;
+        inp.addEventListener('input', (e) => {
+          const val = parseInt(e.target.value);
+          state[k] = val;
+          valEl.textContent = val + '%';
+          updateKPIs();
+          if (radarChart) renderRadarChart();
+          if (climaBarChart) renderClimaChart();
+        });
+      });
+
+      document.getElementById('btnQuickDemo')?.addEventListener('click', () => {
+        const demo = { coercitivo: 30, orientativo: 86, afiliativo: 80, democratico: 75, ejemplar: 55, formativo: 82 };
+        Object.keys(demo).forEach(k => {
+          state[k] = demo[k];
+          const elInp = document.getElementById(`input-${k}`);
+          const elVal = document.getElementById(`val-${k}`);
+          if (elInp) elInp.value = demo[k];
+          if (elVal) elVal.textContent = demo[k] + '%';
+        });
+        updateKPIs();
+        renderRadarChart();
+        renderClimaChart();
+        showToast('Perfil de referencia cargado');
+      });
+    }
+
+    function updateKPIs() {
+      const resAvg = ((state.orientativo + state.afiliativo + state.democratico + state.formativo) / 4).toFixed(1);
+      const disAvg = ((state.coercitivo + state.ejemplar) / 2).toFixed(1);
+
+      const elRes = document.getElementById('kpi-resonantes');
+      const elDis = document.getElementById('kpi-disonantes');
+      if (elRes) elRes.textContent = resAvg + '%';
+      if (elDis) elDis.textContent = disAvg + '%';
+
+      let maxK = 'orientativo';
+      let maxV = -1;
+      Object.keys(state).forEach(k => {
+        if (state[k] > maxV) {
+          maxV = state[k];
+          maxK = k;
+        }
+      });
+
+      const names = {
+        coercitivo: 'Coercitivo',
+        orientativo: 'Orientativo',
+        afiliativo: 'Afiliativo',
+        democratico: 'Democrático',
+        ejemplar: 'Ejemplar',
+        formativo: 'Formativo'
+      };
+
+      const bDom = document.getElementById('badgeDominancia');
+      if (bDom) bDom.textContent = `${names[maxK]} Dominante (${maxV}%)`;
+    }
+
+    // Gráfico Radar (Bloque 2 - Captura 1)
+    function renderRadarChart() {
+      const ctx = document.getElementById('radarChart')?.getContext('2d');
+      if (!ctx) return;
+
+      const dataValues = [
+        state.coercitivo,
+        state.orientativo,
+        state.afiliativo,
+        state.democratico,
+        state.ejemplar,
+        state.formativo
+      ];
+      const benchmarkValues = [30, 85, 80, 75, 45, 80];
+
+      if (radarChart) {
+        radarChart.data.datasets[0].data = dataValues;
+        radarChart.update();
+        return;
+      }
+
+      radarChart = new Chart(ctx, {
+        type: 'radar',
+        data: {
+          labels: ['Coercitivo', 'Orientativo', 'Afiliativo', 'Democrático', 'Ejemplar', 'Formativo'],
+          datasets: [
+            {
+              label: 'Tu Perfil (Goleman)',
+              data: dataValues,
+              backgroundColor: 'rgba(0, 0, 120, 0.22)',
+              borderColor: '#000078',
+              pointBackgroundColor: '#000078',
+              pointBorderColor: '#fff',
+              borderWidth: 2.5
+            },
+            {
+              label: 'Líder Resonante Ideal',
+              data: benchmarkValues,
+              backgroundColor: 'rgba(16, 185, 129, 0.1)',
+              borderColor: 'rgba(16, 185, 129, 0.7)',
+              borderDash: [4, 4],
+              pointBackgroundColor: 'rgba(16, 185, 129, 0.8)',
+              borderWidth: 1.5
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            r: {
+              angleLines: { color: '#e2e8f0' },
+              grid: { color: '#e2e8f0' },
+              suggestedMin: 0,
+              suggestedMax: 100,
+              ticks: { stepSize: 25, backdropColor: 'transparent', font: { size: 9 } }
+            }
+          },
+          plugins: {
+            legend: { position: 'top', labels: { font: { size: 10 } } }
+          }
+        }
+      });
+    }
+
+    // Gráfico de los 6 Impulsores del Clima (Bloque 2 - Captura 2)
+    function calculateClimateScores() {
+      const drivers = ['flex', 'resp', 'est', 'rec', 'cla', 'com'];
+      const results = {};
+      drivers.forEach(d => {
+        let sum = 0;
+        Object.keys(state).forEach(st => {
+          const norm = state[st] / 100;
+          sum += norm * golemanMatrix[st][d];
+        });
+        results[d] = Math.round((sum / 6) * 180);
+      });
+      return results;
+    }
+
+    function renderClimaChart() {
+      const climate = calculateClimateScores();
+      const ctx = document.getElementById('climaBarChart')?.getContext('2d');
+      if (!ctx) return;
+
+      const labels = ['Flexibilidad', 'Responsabilidad', 'Estándares', 'Recompensas', 'Claridad', 'Compromiso'];
+      const dataArr = [climate.flex, climate.resp, climate.est, climate.rec, climate.cla, climate.com];
+      const bgColors = dataArr.map(v => v >= 0 ? 'rgba(0, 0, 120, 0.8)' : 'rgba(225, 29, 72, 0.8)');
+
+      if (climaBarChart) {
+        climaBarChart.data.datasets[0].data = dataArr;
+        climaBarChart.data.datasets[0].backgroundColor = bgColors;
+        climaBarChart.update();
+        updateClimateDriverCards(climate);
+        return;
+      }
+
+      climaBarChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+          labels: labels,
+          datasets: [{
+            label: 'Índice de Impacto en el Clima',
+            data: dataArr,
+            backgroundColor: bgColors,
+            borderRadius: 6
+          }]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: { min: -50, max: 60, grid: { color: '#f1f5f9' }, ticks: { font: { size: 9 } } },
+            x: { grid: { display: false }, ticks: { font: { size: 9, weight: '600' } } }
+          },
+          plugins: { legend: { display: false } }
+        }
+      });
+
+      updateClimateDriverCards(climate);
+    }
+
+    function updateClimateDriverCards(climate) {
+      const list = document.getElementById('climaDriversList');
+      if (!list) return;
+      list.innerHTML = '';
+
+      const items = [
+        { key: 'cla', name: 'Claridad', val: climate.cla },
+        { key: 'rec', name: 'Recompensas', val: climate.rec },
+        { key: 'flex', name: 'Flexibilidad', val: climate.flex },
+        { key: 'com', name: 'Compromiso', val: climate.com }
+      ];
+
+      items.forEach(it => {
+        const isPos = it.val >= 0;
+        const row = document.createElement('div');
+        row.className = `p-1.5 px-2.5 rounded-lg border flex justify-between items-center ${isPos ? 'bg-blue-50/50 border-blue-100 text-uoc-corporate' : 'bg-rose-50/50 border-rose-100 text-rose-700'}`;
+        row.innerHTML = `
+          <span class="font-semibold text-[11px]">${it.name}</span>
+          <span class="font-bold text-[11px] font-mono">${it.val > 0 ? '+' : ''}${it.val}</span>
+        `;
+        list.appendChild(row);
+      });
+    }
+
+    // ================= BLOQUE 4: MATRIZ DE EISENHOWER =================
+    function renderEisenhowerBoard() {
+      const bankEl = document.getElementById('taskBank');
+      const zQ1 = document.getElementById('zone-q1');
+      const zQ2 = document.getElementById('zone-q2');
+      const zQ3 = document.getElementById('zone-q3');
+      const zQ4 = document.getElementById('zone-q4');
+
+      if (!bankEl) return;
+      bankEl.innerHTML = '';
+      zQ1.innerHTML = '';
+      zQ2.innerHTML = '';
+      zQ3.innerHTML = '';
+      zQ4.innerHTML = '';
+
+      const counts = { bank: 0, q1: 0, q2: 0, q3: 0, q4: 0 };
+
+      eisenhowerTasks.forEach(task => {
+        counts[task.current]++;
+        const card = createEisenhowerTaskCard(task);
+        if (task.current === 'bank') bankEl.appendChild(card);
+        else if (task.current === 'q1') zQ1.appendChild(card);
+        else if (task.current === 'q2') zQ2.appendChild(card);
+        else if (task.current === 'q3') zQ3.appendChild(card);
+        else if (task.current === 'q4') zQ4.appendChild(card);
+      });
+
+      document.getElementById('badgeCountQ1').textContent = counts.q1;
+      document.getElementById('badgeCountQ2').textContent = counts.q2;
+      document.getElementById('badgeCountQ3').textContent = counts.q3;
+      document.getElementById('badgeCountQ4').textContent = counts.q4;
+
+      updateEisenhowerDiagnostics(counts);
+    }
+
+    function createEisenhowerTaskCard(task) {
+      const card = document.createElement('div');
+      card.id = `task-card-${task.id}`;
+      card.draggable = true;
+      card.ondragstart = (e) => drag(e, task.id);
+      card.className = "p-2.5 rounded-xl border bg-white shadow-sm hover:shadow transition text-xs flex flex-col justify-between gap-1.5 cursor-grab border-slate-200";
+
+      let statusBadge = '';
+      if (task.current !== 'bank') {
+        const isIdeal = task.current === task.ideal;
+        statusBadge = isIdeal
+          ? `<span class="text-[9px] font-bold text-emerald-700 bg-emerald-50 px-1.5 py-0.5 rounded border border-emerald-200">Alineado ✓</span>`
+          : `<span class="text-[9px] font-medium text-amber-700 bg-amber-50 px-1.5 py-0.5 rounded border border-amber-200">Revisable</span>`;
+      }
+
+      card.innerHTML = `
+        <div class="flex items-start justify-between gap-1.5">
+          <span class="text-slate-800 leading-snug font-medium select-none text-[11px]">${task.text}</span>
+          ${statusBadge}
+        </div>
+        <div class="flex items-center justify-between pt-1 border-t border-slate-100 text-[10px] text-slate-400 no-print">
+          <span>Cuadrante:</span>
+          <select class="text-[10px] bg-slate-100 border border-slate-200 rounded px-1.5 py-0.5 text-slate-700 focus:outline-none" onchange="moveTaskSelect(${task.id}, this.value)">
+            <option value="bank" ${task.current === 'bank' ? 'selected' : ''}>Banco</option>
+            <option value="q1" ${task.current === 'q1' ? 'selected' : ''}>Q1: Crisis (Hacer Ahora)</option>
+            <option value="q2" ${task.current === 'q2' ? 'selected' : ''}>Q2: Líder (Planificar)</option>
+            <option value="q3" ${task.current === 'q3' ? 'selected' : ''}>Q3: Delegar</option>
+            <option value="q4" ${task.current === 'q4' ? 'selected' : ''}>Q4: Eliminar</option>
+          </select>
+        </div>
+      `;
+      return card;
+    }
+
+    function moveTaskSelect(taskId, destination) {
+      const t = eisenhowerTasks.find(item => item.id === taskId);
+      if (t) {
+        t.current = destination;
+        renderEisenhowerBoard();
+      }
+    }
+    window.moveTaskSelect = moveTaskSelect;
+
+    window.allowDrop = (ev) => ev.preventDefault();
+    window.drag = (ev, taskId) => ev.dataTransfer.setData("text/plain", taskId);
+    window.drop = (ev, targetZone) => {
+      ev.preventDefault();
+      const taskId = parseInt(ev.dataTransfer.getData("text/plain"));
+      const t = eisenhowerTasks.find(item => item.id === taskId);
+      if (t) {
+        t.current = targetZone;
+        renderEisenhowerBoard();
+      }
+    };
+
+    function updateEisenhowerDiagnostics(counts) {
+      const total = eisenhowerTasks.length;
+      const classified = total - counts.bank;
+
+      const pQ1 = classified > 0 ? Math.round((counts.q1 / classified) * 100) : 0;
+      const pQ2 = classified > 0 ? Math.round((counts.q2 / classified) * 100) : 0;
+      const pQ3 = classified > 0 ? Math.round((counts.q3 / classified) * 100) : 0;
+      const pQ4 = classified > 0 ? Math.round((counts.q4 / classified) * 100) : 0;
+
+      document.getElementById('pctQ1').textContent = pQ1 + '%';
+      document.getElementById('pctQ2').textContent = pQ2 + '%';
+      document.getElementById('pctQ3').textContent = pQ3 + '%';
+      document.getElementById('pctQ4').textContent = pQ4 + '%';
+
+      document.getElementById('barQ1').style.width = pQ1 + '%';
+      document.getElementById('barQ2').style.width = pQ2 + '%';
+      document.getElementById('barQ3').style.width = pQ3 + '%';
+      document.getElementById('barQ4').style.width = pQ4 + '%';
+
+      const badge = document.getElementById('diagnosticSummaryBadge');
+      const feedback = document.getElementById('pedagogicalFeedback');
+
+      badge.textContent = `${classified} de ${total} tareas situadas (${pQ2}% en Q2)`;
+
+      if (classified === 0) {
+        feedback.innerHTML = "Arrastra o asigna las 10 tareas del caso FUNIN a los cuadrantes para evaluar si tu liderazgo está enfocado a la reacción inmediata o a la construcción estratégica.";
+        return;
+      }
+
+      if (pQ2 >= 40 && pQ1 <= 30) {
+        feedback.className = "mt-3 p-3 rounded-lg text-xs leading-relaxed border bg-emerald-50 border-emerald-300 text-emerald-950";
+        feedback.innerHTML = `<strong>★ ¡Excelente visión directiva!</strong> De acuerdo con Whetten & Cameron (2016), has logrado centrar tu liderazgo en la prevención, el desarrollo del equipo (Julia, Fatiha, Pedro) y la mejora estructural (Laura, Sofie, Juan), pasando de una gestión reactiva a una proactiva.`;
+      } else if (pQ1 + pQ3 >= 50) {
+        feedback.className = "mt-3 p-3 rounded-lg text-xs leading-relaxed border bg-rose-50 border-rose-200 text-rose-900";
+        feedback.innerHTML = `<strong>⚠️ Atención a la trampa de apagar fuegos:</strong> Más del 50% de tu atención está atrapada en la urgencia (Q1) y en interrupciones (Q3). Revisa cómo puedes delegar consultas menores y reservar bloques para soluciones de fondo en el Q2.`;
+      } else {
+        feedback.className = "mt-3 p-3 rounded-lg text-xs leading-relaxed border bg-blue-50 border-blue-200 text-slate-800";
+        feedback.innerHTML = `<strong>Distribución en transición:</strong> Revisa cómo trasladar más tareas rutinarias hacia el Q3 (delegación) y potenciar la planificación estratégica en el Q2.`;
+      }
+    }
+
+    function setupEisenhowerControls() {
+      document.getElementById('btnAddTask')?.addEventListener('click', () => {
+        const inp = document.getElementById('inputCustomTask');
+        const text = inp.value.trim();
+        if (text) {
+          eisenhowerTasks.push({ id: Date.now(), text: text, ideal: "q2", current: "bank" });
+          inp.value = '';
+          renderEisenhowerBoard();
+          showToast('Tarea añadida al banco');
+        }
+      });
+
+      document.getElementById('btnResetEisenhower')?.addEventListener('click', () => {
+        eisenhowerTasks = JSON.parse(JSON.stringify(defaultEisenhowerTasks));
+        renderEisenhowerBoard();
+        showToast('Matriz reiniciada');
+      });
+
+      document.getElementById('btnSolveEisenhower')?.addEventListener('click', () => {
+        eisenhowerTasks.forEach(t => t.current = t.ideal);
+        renderEisenhowerBoard();
+        showToast('Solución Pedagógica Recomendada Cargada');
+      });
+
+      document.getElementById('btnCleanView')?.addEventListener('click', () => {
+        document.getElementById('printCaptureNotice').classList.remove('hidden');
+        document.getElementById('cleanViewHeader').classList.remove('hidden');
+        document.getElementById('taskBankContainer').classList.add('hidden');
+        document.getElementById('eisenhowerControlsTop').classList.add('hidden');
+        document.querySelectorAll('.no-print').forEach(el => el.classList.add('hidden'));
+        showToast('Vista Limpia para captura activada');
+      });
+
+      document.getElementById('btnExitCleanView')?.addEventListener('click', () => {
+        document.getElementById('printCaptureNotice').classList.add('hidden');
+        document.getElementById('cleanViewHeader').classList.add('hidden');
+        document.getElementById('taskBankContainer').classList.remove('hidden');
+        document.getElementById('eisenhowerControlsTop').classList.remove('hidden');
+        document.querySelectorAll('.no-print').forEach(el => el.classList.remove('hidden'));
+        showToast('Modo interactivo restablecido');
+      });
+    }
+
+    // ================= DOSSIER DE CAPTURAS & SÍNTESIS =================
+    function updateReportOutputs() {
+      const clim = calculateClimateScores();
+      
+      // Bloque 2
+      const r21 = document.getElementById('resp2_1')?.value || "Perfil resonante con predominio Orientativo, Afiliativo y Formativo según Daniel Goleman.";
+      const r22A = document.getElementById('resp2_2A')?.value || "Fatiha y Pedro: Estilos Orientativo y Afiliativo para evitar la presión crónica del estilo Ejemplar.";
+      const r22B = document.getElementById('resp2_2B')?.value || "Laura, Sofie y Juan: Estilos Democrático y Afiliativo para acordar condiciones de accesibilidad en clientes.";
+      const r22C = document.getElementById('resp2_2C')?.value || "Julia: Estilo Formativo / Coach para empoderar su capacidad de liderazgo formal.";
+      const r24 = document.getElementById('resp2_4')?.value || `Impacto positivo destacado en Claridad (+${clim.cla}), Recompensas (+${clim.rec}), Flexibilidad (+${clim.flex}) y Compromiso (+${clim.com}).`;
+
+      document.getElementById('txtReportBloc2').innerHTML = `
+        <p><strong>2.1 Perfil de liderazgo:</strong> ${r21}</p>
+        <p><strong>2.2 Aplicación por subgrupos en FUNIN:</strong> ${r22A} | ${r22B} | ${r22C}</p>
+        <p><strong>2.4 Impacto en los 6 impulsores del clima (Litwin & Stringer):</strong> ${r24}</p>
+      `;
+
+      // Bloque 4
+      const qCounts = { q1: 0, q2: 0, q3: 0, q4: 0, bank: 0 };
+      eisenhowerTasks.forEach(t => qCounts[t.current]++);
+      const totalClassified = eisenhowerTasks.length - qCounts.bank;
+      const pctQ2 = totalClassified > 0 ? Math.round((qCounts.q2 / totalClassified) * 100) : 0;
+      const r41 = document.getElementById('resp4_1')?.value || `Se ha alcanzado una concentración del ${pctQ2}% en el Cuadrante II (Liderazgo Estratégico / No Urgente pero Importante).`;
+      const r42 = document.getElementById('resp4_2')?.value || "Renuncia a la reacción inmediata ante demandas no urgentes para priorizar acuerdos estructurales con clientes.";
+
+      document.getElementById('txtReportBloc4').innerHTML = `
+        <p><strong>4.1 Matriz de Eisenhower Web:</strong> ${r41}</p>
+        <p><strong>4.2 Análisis de coste y renuncias:</strong> ${r42} (Whetten & Cameron, 2016).</p>
+      `;
+    }
+
+    function setupClipboard() {
+      document.getElementById('btnCopyReport')?.addEventListener('click', () => {
+        updateReportOutputs();
+        const b2 = document.getElementById('txtReportBloc2').innerText;
+        const b4 = document.getElementById('txtReportBloc4').innerText;
+
+        const full = `========================================================\n` +
+          `EVIDENCIAS WEB INTERACTIVAS: BLOQUES 2 Y 4 (RETO 1 - FUNIN)\n` +
+          `Máster Universitario en Comunicación Corporativa, Protocolo y Eventos - UOC\n` +
+          `========================================================\n\n` +
+          `BLOQUE 2: LIDERAZGO Y CLIMA (DANIEL GOLEMAN, 1,5 PTS)\n${b2}\n\n` +
+          `BLOQUE 4: GESTIÓN DEL TIEMPO Y MATRIZ DE EISENHOWER (1,5 PTS)\n${b4}\n\n` +
+          `REFERENCIAS BIBLIOGRÁFICAS (APA 7ª ed.):\n` +
+          `- Goleman, D. (2005). Liderazgo que obtiene resultados. Harvard Business Review América Latina, 83(11), 26-37.\n` +
+          `- Whetten, D. A., & Cameron, K. S. (2016). Desarrollo de habilidades directivas (9ª ed.). Pearson Educación.\n`;
+
+        const ta = document.createElement('textarea');
+        ta.value = full;
+        document.body.appendChild(ta);
+        ta.select();
+        try {
+          document.execCommand('copy');
+          showToast('Texto de los Bloques 2 y 4 copiado al portapapeles');
+        } catch (e) {
+          showToast('Error al copiar texto');
+        }
+        document.body.removeChild(ta);
+      });
+
+      const modal = document.getElementById('helpModal');
+      document.getElementById('btnHelpModal')?.addEventListener('click', () => modal.classList.remove('hidden'));
+      document.getElementById('btnCloseModal')?.addEventListener('click', () => modal.classList.add('hidden'));
+      document.getElementById('btnCloseModalBtn')?.addEventListener('click', () => modal.classList.add('hidden'));
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      setupNavigationListeners();
+      setupInputs();
+      setupEisenhowerControls();
+      renderEisenhowerBoard();
+      setupClipboard();
+      updateKPIs();
+    });
+  </script>
+</body>
+</html>
